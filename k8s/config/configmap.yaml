@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: drone-config-map
+  namespace: drone
+data:
+  DRONE_GITHUB_URL: ${DRONE_GITHUB_URL}

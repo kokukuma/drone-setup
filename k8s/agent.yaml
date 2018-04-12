@@ -1,0 +1,36 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: drone-agent
+  namespace: drone
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: drone-agent
+    spec:
+      containers:
+        - name: drone-agent
+          image: drone/agent:0.8
+          ports:
+            - containerPort: 8000 # これdocker-composeにはない
+          args: ["agent"]
+          env:
+            - name: DRONE_SERVER
+              value: drone-service:9000
+            - name: DRONE_MAX_PROCS
+              value: "2"
+            - name: DRONE_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: drone-secrets
+                  key: DRONE_SECRET
+          volumeMounts:
+            - mountPath: /var/run/docker.sock
+              name: docker-sock
+      volumes:
+        - name: docker-sock
+          hostPath:
+            path: /var/run/docker.sock
+
