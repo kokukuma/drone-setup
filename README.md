@@ -12,6 +12,7 @@ ngrok http 8080
 ```
 
 + 起動
+  + http://readme.drone.io/0.8/install/server-configuration/
 ```
 cd local
 
@@ -58,7 +59,7 @@ kubectl create ns drone
 
 + 永続化volume作成
 ```
-gcloud compute disks create --size=500GB drone-home
+gcloud compute disks create --size=500GB drone-volume
 ```
 
 + 静的IPアドレスの割当
@@ -90,14 +91,24 @@ gcloud compute addresses create drone-static-ip --global
 
   + service/deploymentを作成する
   ```
-  kubectl apply -f k8s/
   kubectl apply -f k8s/lb/
+  kubectl apply -f k8s/volume/
+  kubectl apply -f k8s/mysql/
+  kubectl apply -f k8s/drone/
   ```
 
   + ちゃんと出来てるか確認する
   ```
   kubectrl get pod --namespace drone
   ```
+
+### mysql起動後
++ drone databaseを作る
+```
+kubectl --namespace drone exec -it mysql-84db84fb8d-wt5hk /bin/bash
+mysql -u root -ppassword
+create database if not exists drone;
+```
 
 ## トラブルシューティン部
 ### podが起動しないときは
@@ -107,9 +118,6 @@ kubectrl get pod
 kubectrl logs po/name..
 kubectrl describe po/name..
 ```
-
-### つながらない
-+ 
 
 ### kubernetesのuiをみる
 + token確認
@@ -123,20 +131,9 @@ kubectl proxy -p 8002
 + http://localhost:8002/ui
   + toeknを入力してログイン
 
-
-## 課題
-### GCP的
-+ gcePersistentDisk、上手くmountできない.
-
-+ mysqlにする
-
-
-### Drone
-+ ログインの制限
-+ 特定のオーガナイゼーションに絞る. 怖い.
-+ mysqlにする
-
-
+### 課題
++ GKE上で動かした場合, gheからのcloneが出来てなさげ...
++ 
 
 
 ## 資料

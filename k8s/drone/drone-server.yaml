@@ -19,6 +19,11 @@ spec:
           env:
             - name: DRONE_OPEN
               value: "true"
+            - name: DRONE_ORGS
+              valueFrom:
+                configMapKeyRef:
+                  name: drone-config-map
+                  key: DRONE_ORGS
             - name: DRONE_HOST
               valueFrom:
                 configMapKeyRef:
@@ -48,15 +53,31 @@ spec:
                   key: DRONE_SECRET
             - name: DRONE_GITHUB_PRIVATE_MODE
               value: "true"
+            - name: DRONE_DATABASE_DRIVER
+              value: "mysql"
+            - name: DRONE_DATABASE_DATASOURCE
+              valueFrom:
+                secretKeyRef:
+                  name: drone-secrets
+                  key: DRONE_DATABASE_DATASOURCE
           volumeMounts:
             - mountPath: /var/lib/drone
               name: drone-home
-      volumes:
-        - name: drone-home
-          emptyDir: {}
+      # volumes:
+      #   - name: drone-home
+      #     hostPath:
+      #       path: /var/lib/drone
+      # volumes:
+      #   - name: drone-home
+      #     emptyDir: {}
+      #
       # volumes:
       #   - name: drone-home
       #     gcePersistentDisk:
       #       pdName: drone-home
       #       fsType: ext4
-      #       # partition: 1
+      #
+      volumes:
+        - name: drone-home
+          persistentVolumeClaim:
+            claimName: drone-volume-claim
