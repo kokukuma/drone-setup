@@ -3,7 +3,10 @@ kind: Ingress
 metadata:
   name: drone
   namespace: drone
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: drone-static-ip
 spec:
   backend:
     serviceName: drone-service
     servicePort: 8000
+

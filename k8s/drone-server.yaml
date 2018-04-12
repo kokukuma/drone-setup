@@ -20,7 +20,10 @@ spec:
             - name: DRONE_OPEN
               value: "true"
             - name: DRONE_HOST
-              value: "http://35.190.49.235"
+              valueFrom:
+                configMapKeyRef:
+                  name: drone-config-map
+                  key: DRONE_HOST
             - name: DRONE_GITHUB
               value: "true"
             - name: DRONE_GITHUB_URL

@@ -61,6 +61,13 @@ kubectl create ns drone
 gcloud compute disks create --size=500GB drone-home
 ```
 
++ 静的IPアドレスの割当
+```
+gcloud compute addresses create drone-static-ip --global
+```
+
+
+
 + pod作る
   + 環境変数の設定(direnv便利)
   ```
@@ -100,21 +107,28 @@ kubectrl get pod
 kubectrl logs po/name..
 kubectrl describe po/name..
 ```
+
 ### つながらない
 + 
+
+### kubernetesのuiをみる
++ token確認
+```
+kubectl config view
+```
++ proxy起動
+```
+kubectl proxy -p 8002
+```
++ http://localhost:8002/ui
+  + toeknを入力してログイン
 
 
 ## 課題
 ### GCP的
-
-+ DRONE_HOSTに, serviceで割り当てられるIPを付ける方法
-  + `DRONE_SERVER_SERVICE_HOST` とか使えないか？
-
 + gcePersistentDisk、上手くmountできない.
 
 + mysqlにする
-
-+ DNSはどうやって？
 
 
 ### Drone
