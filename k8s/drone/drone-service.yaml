@@ -12,3 +12,18 @@ spec:
     - protocol: TCP
       port: 8000
       targetPort: 8000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: drone-grpc-service
+  namespace: drone
+spec:
+  type: NodePort
+  # type: LoadBalancer
+  selector:
+    app: drone-server
+  ports:
+    - protocol: TCP
+      port: 9000
+      targetPort: 9000

@@ -11,6 +11,9 @@ brew install drone
 ngrok http 8080
 ```
 
++ Register a new OAuth application
+  + https://github.com/settings/applications/new
+
 + 起動
   + http://readme.drone.io/0.8/install/server-configuration/
 ```

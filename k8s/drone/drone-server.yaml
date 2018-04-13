@@ -60,6 +60,8 @@ spec:
                 secretKeyRef:
                   name: drone-secrets
                   key: DRONE_DATABASE_DATASOURCE
+            - name: DRONE_DEBUG
+              value: "true"
           volumeMounts:
             - mountPath: /var/lib/drone
               name: drone-home
