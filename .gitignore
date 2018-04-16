@@ -1,2 +1,4 @@
 .envrc
 local/drone
+drone-sa.json
+.terraform
