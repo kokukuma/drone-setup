@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: drone-server
-          image: drone/drone:0.8
+          image: drone/drone:0.8.5
           ports:
             - containerPort: 8000
             - containerPort: 9000
