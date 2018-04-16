@@ -45,7 +45,7 @@ docker-machine ssh default -N -f -g -L 8080:localhost:8080
   + PRを作成してpushする
 
 
-## kubernetes上での実行
+## clusterを作る
 + cluster作る
   + [同じプロジェクトならGCRにアクセスするためにscope追加とかする必要はない](https://cloud.google.com/container-registry/docs/using-with-google-cloud-platform?hl=ja)
 ```
@@ -53,11 +53,6 @@ gcloud container clusters create my-cluster
 ```
 ```
 gcloud container clusters list
-```
-
-+ Kubernetesの名前空間を作る
-```
-kubectl create ns drone
 ```
 
 + 永続化volume作成
@@ -71,6 +66,12 @@ gcloud compute addresses create drone-static-ip --global
 ```
 
 
+## kubernetesでの実行
+
++ Kubernetesの名前空間を作る
+```
+kubectl create ns drone
+```
 
 + pod作る
   + 環境変数の設定(direnv便利)
@@ -108,18 +109,22 @@ gcloud compute addresses create drone-static-ip --global
 ### mysql起動後
 + drone databaseを作る
 ```
-kubectl --namespace drone exec -it mysql-84db84fb8d-wt5hk /bin/bash
-mysql -u root -ppassword
-create database if not exists drone;
+kubectl --namespace drone exec -it mysql-84db84fb8d-wt5hk mysql -u root -ppassword -e 'create database if not exists drone;'
+
 ```
+
+## terraformにまとめる
++ [terraform](https://www.terraform.io/docs/providers/google/r/container_cluster.html)
++ 疑問
+  + master_authってなんだ？
 
 ## トラブルシューティン部
 ### podが起動しないときは
 + イベントを見る
 ```
-kubectrl get pod
-kubectrl logs po/name..
-kubectrl describe po/name..
+kubectl get pod
+kubectl logs po/name..
+kubectl describe po/name..
 ```
 
 ### kubernetesのuiをみる
@@ -142,3 +147,26 @@ kubectl proxy -p 8002
 ## 資料
 + https://github.com/vallard/drone-kubernetes/blob/master/drone-server.yaml
 + https://github.com/appleboy/drone-on-kubernetes/blob/master/gke/drone-server-deployment.yaml
+
+
+## 設定すべき環境変数
+```
+export DRONE_HOST=""
+export DRONE_GITHUB_CLIENT=""
+export DRONE_GITHUB_SECRET=""
+export DRONE_SECRET="random-string"
+export DRONE_ORGS=""
+export MYSQL_PASSWORD="password"
+export DRONE_DATABASE_DATASOURCE="root:password@tcp(mysql-service:3306)/drone?parseTime=true"
+export DRONE_GITHUB_URL=""
+
+export DRONE_GITHUB_CLIENT_BASE64=$(echo -n ${DRONE_GITHUB_CLIENT} | base64 )
+export DRONE_GITHUB_SECRET_BASE64=$(echo -n ${DRONE_GITHUB_SECRET} | base64 )
+export DRONE_SECRET_BASE64=$(echo -n ${DRONE_SECRET} | base64 )
+export MYSQL_PASSWORD_BASE64=$(echo -n ${MYSQL_PASSWORD} | base64 )
+export DRONE_DATABASE_DATASOURCE_BASE64=$(echo -n ${DRONE_DATABASE_DATASOURCE} | base64 )
+
+export TF_VAR_project=""
+export TF_VAR_region=""
+export TF_VAR_zone=""
+```

@@ -9,3 +9,7 @@ variable "region" {
 variable "zone" {
   description = "gcp zone"
 }
+
+variable "cluster_name" {
+  description = "gkp cluster name"
+}
