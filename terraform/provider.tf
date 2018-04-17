@@ -30,6 +30,14 @@ module "kubernetes_apply" {
 
   // clusterが出来たら実行
   cluster_name = "${module.create_cluster.cluster_name}"
-  namespace    = "drone"
-  k8spath      = "k8s"
+
+  static_ip = "${module.create_cluster.static_ip}"
+  namespace = "drone"
+  k8spath   = "k8s"
 }
+
+// 表示するもの
+// この後やること
+// + droneのurl / レポジトリアクティベイト
+// + 
+

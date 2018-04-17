@@ -2,3 +2,4 @@
 local/drone
 drone-sa.json
 .terraform
+errored.tfstate

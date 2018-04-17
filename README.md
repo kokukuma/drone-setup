@@ -5,15 +5,21 @@ brew tap drone/drone
 brew install drone
 ```
 
+## 準備
+### gihtubのtoken取得
++ [Register a new OAuth application](https://github.com/settings/applications/new)
+
+### 環境変数
++ 確認
+
 ## local上での実行
+### ngrok起動
 + [ngrok](https://dashboard.ngrok.com/get-started)
 ```
 ngrok http 8080
 ```
 
-+ Register a new OAuth application
-  + https://github.com/settings/applications/new
-
+### droneを起動
 + 起動
   + http://readme.drone.io/0.8/install/server-configuration/
 ```
@@ -32,7 +38,7 @@ docker-compose up
 docker-machine ssh default -N -f -g -L 8080:localhost:8080
 ```
 
-## 実行確認
+### 実行確認
 + コマンドから実行
   + .drone.yamlを設置したレポジトリを作る
   + drone commandから実行する
@@ -44,81 +50,21 @@ docker-machine ssh default -N -f -g -L 8080:localhost:8080
   + Drone.io上で, レポジトリをアクティベイトする.
   + PRを作成してpushする
 
+## GKEで実行する
+### terraform
++ [terraform](https://www.terraform.io/docs/providers/google/r/container_cluster.html) を実行
 
-## clusterを作る
-+ cluster作る
-  + [同じプロジェクトならGCRにアクセスするためにscope追加とかする必要はない](https://cloud.google.com/container-registry/docs/using-with-google-cloud-platform?hl=ja)
++ 実行
 ```
-gcloud container clusters create my-cluster
-```
-```
-gcloud container clusters list
-```
-
-+ 永続化volume作成
-```
-gcloud compute disks create --size=500GB drone-volume
-```
-
-+ 静的IPアドレスの割当
-```
-gcloud compute addresses create drone-static-ip --global
+terraform plan terraform
+terraform apply terraform
 ```
 
 
-## kubernetesでの実行
+### 実行確認
++ ローカルと同様
 
-+ Kubernetesの名前空間を作る
-```
-kubectl create ns drone
-```
-
-+ pod作る
-  + 環境変数の設定(direnv便利)
-  ```
-  export DRONE_HOST="http://******.ngrok.io"
-  export DRONE_GITHUB_CLIENT="*****"
-  export DRONE_GITHUB_SECRET="*****"
-  export DRONE_SECRET=random-string
-  export DRONE_GITHUB_URL="https://github.com"
-
-  export DRONE_GITHUB_CLIENT_BASE64=$(echo ${DRONE_GITHUB_CLIENT} | base64 )
-  export DRONE_GITHUB_SECRET_BASE64=$(echo ${DRONE_GITHUB_SECRET} | base64 )
-  export DRONE_SECRET_BASE64=$(echo ${DRONE_SECRET} | base64 )
-  ```
-
-  + configmap, secretを作成する
-  ```
-  envsubst < k8s/config/configmap.yaml | kubectl apply -f -
-  envsubst < k8s/config/secret.yaml | kubectl apply -f -
-  ```
-
-  + service/deploymentを作成する
-  ```
-  kubectl apply -f k8s/lb/
-  kubectl apply -f k8s/volume/
-  kubectl apply -f k8s/mysql/
-  kubectl apply -f k8s/drone/
-  ```
-
-  + ちゃんと出来てるか確認する
-  ```
-  kubectrl get pod --namespace drone
-  ```
-
-### mysql起動後
-+ drone databaseを作る
-```
-kubectl --namespace drone exec -it mysql-84db84fb8d-wt5hk mysql -u root -ppassword -e 'create database if not exists drone;'
-
-```
-
-## terraformにまとめる
-+ [terraform](https://www.terraform.io/docs/providers/google/r/container_cluster.html)
-+ 疑問
-  + master_authってなんだ？
-
-## トラブルシューティン部
+## その他
 ### podが起動しないときは
 + イベントを見る
 ```
@@ -139,12 +85,8 @@ kubectl proxy -p 8002
 + http://localhost:8002/ui
   + toeknを入力してログイン
 
-### 課題
-+ GKE上で動かした場合, gheからのcloneが出来てなさげ...
-+ 
 
-
-## 資料
+### 資料
 + https://github.com/vallard/drone-kubernetes/blob/master/drone-server.yaml
 + https://github.com/appleboy/drone-on-kubernetes/blob/master/gke/drone-server-deployment.yaml
 
@@ -170,3 +112,38 @@ export TF_VAR_project=""
 export TF_VAR_region=""
 export TF_VAR_zone=""
 ```
+
+## 課題
++ 立ち上げたあとの出力を整理したい
+  + つぎなにすればいいか
+
++ droneの接続先がIPのまま
+  + これだと, 立ち上げる度にIP変わる
+    + github OAuthのURL設定するものめんどくさいし.
+    + staticにしたものをずっと保持し続けるでもありかな...
+      + terraformで管理外になるけど.
+      + GCSもそうだしいいかな...
+
++ 認証とかパスワードとかその辺
+  + mysqlのuser名 / password
+  + 設定すべき環境変数がけっこうぐちゃってる
+
++ 割り当てるスペックが雑
+  + nodeのspecを利用するpodからちゃんと考える
+
++ teraffomr destroyしてもkubernetesのingの設定消せてない
+  + kubectl delete ingしてるけど, なんか残るな...
+    + ネットワークサービス-負荷分散-ロードバランサ/バックエンド
+    + ComputeEngine-インスタンスグループ
+  + 自分でロードバランサとかバックエンドサービスとか作って、
+    + それをIngressの設定で明示的に使うとかした（static ip割り当てるときみたいに）ら、うまくいかないかな。。
+
+
++ kubernetes.tf、他の環境で動かすためには前提がある
+  + 少なくともgcloud / kubectlが動かないと.
+  + あとdirenvに書いてあるたくさんの環境変数
+
++ kubernetesのprovider, deployementに対応したらそっちで書き直す.
+  + destroyしたときの挙動とか
+
+
