@@ -17,6 +17,14 @@ brew install drone
 + Client IDと Client Secretを作っておく.
 + Homepage URLとAuthorization callback URLは後から作成された物を追加する
 
+### サービスアカウントの作成
++ [サービスアカウントの作成 ](docs/gcloud-iam.md)
++ json keyを取得する
++ これもterraformにしておきたい..
+
+### terraformのbucket作成
++ GCSに作成しておく.
+
 ### 環境変数
 + direnvに書いておく.
 ```
@@ -42,6 +50,7 @@ export DRONE_DATABASE_DATASOURCE_BASE64=$(echo -n ${DRONE_DATABASE_DATASOURCE} |
 export TF_VAR_project=''
 export TF_VAR_region=''
 export TF_VAR_zone=''
+export TF_VAR_credentials_file=''
 ```
 
 ## Drone立ち上げ

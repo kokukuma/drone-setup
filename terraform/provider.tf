@@ -4,13 +4,14 @@
 variable "project" {}
 variable "region" {}
 variable "zone" {}
+variable "credentials_file" {}
 
 variable "cluster_name" {
   default = "drone-cluster"
 }
 
 provider "google" {
-  credentials = "${file("drone-sa.json")}"
+  credentials = "${file("${var.credentials_file}")}"
   project     = "${var.project}"
   region      = "${var.region}"
 }
