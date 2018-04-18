@@ -55,6 +55,10 @@ export TF_VAR_credentials_file=''
 
 ## Drone立ち上げ
 ### terraform
++ 初回
+```
+terraform init terraform
+```
 
 + 実行
 ```

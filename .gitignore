@@ -1,6 +1,7 @@
 .envrc
 .envrc*
 local/drone
-drone-sa.json
 .terraform
 errored.tfstate
+drone-sa.json
+proj-gcp-sa.json
