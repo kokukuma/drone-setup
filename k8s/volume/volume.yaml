@@ -9,5 +9,5 @@ spec:
   accessModes:
     - ReadWriteOnce
   gcePersistentDisk:
-    pdName: drone-volume
+    pdName: drone-disk
     fsType: ext4
