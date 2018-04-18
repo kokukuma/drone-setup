@@ -37,7 +37,10 @@ module "kubernetes_apply" {
 }
 
 // 表示するもの
-// この後やること
-// + droneのurl / レポジトリアクティベイト
-// + 
+output "drone-url" {
+  value = "http://${module.create_cluster.static_ip}"
+}
 
+output "kubectrl get command" {
+  value = "kubectl --namespace drone get po,svc,ing"
+}
