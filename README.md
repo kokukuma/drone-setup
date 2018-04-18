@@ -1,18 +1,17 @@
 # Drone.ioのsetup
-## install drone command
+## 準備
+### install drone command
 ```
 brew tap drone/drone
 brew install drone
 ```
 
-## install gcloud
+### install gcloud
 + [Cloud SDK のインストール](https://cloud.google.com/sdk/downloads?hl=ja)
 
-## install terraform
+### install terraform
 + [getting-started/install](https://www.terraform.io/intro/getting-started/install.html)
 
-
-## 準備
 ### gihtubのtoken取得
 + [Register a new OAuth application](https://github.com/settings/applications/new)
 + Client IDと Client Secretを作っておく.
@@ -95,8 +94,8 @@ terraform apply terraform
   + kubectl delete ingしてるけど, なんか残るな...
     + ネットワークサービス-負荷分散-ロードバランサ/バックエンド
     + ComputeEngine-インスタンスグループ
-  + 自分でロードバランサとかバックエンドサービスとか作って、
-    + それをIngressの設定で明示的に使うとかした（static ip割り当てるときみたいに）ら、うまくいかないかな。。
+  + 暫定対応として, 
+    + `kubectl --namespace drone delete ing drone` をして, 消えたのを見てからdestroy...
 
 + kubernetes.tf、他の環境で動かすためには前提がある
   + 少なくともgcloud / kubectlが動かないと.
