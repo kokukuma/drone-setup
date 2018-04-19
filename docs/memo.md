@@ -11,7 +11,7 @@ gcloud container clusters list
 
 + 永続化volume作成
 ```
-gcloud compute disks create --size=500GB drone-volume
+gcloud compute disks create --size=500GB drone-disk
 ```
 
 + 静的IPアドレスの割当
@@ -52,6 +52,7 @@ kubectl create ns drone
   kubectl apply -f k8s/lb/
   kubectl apply -f k8s/volume/
   kubectl apply -f k8s/mysql/
+  kubectl apply -f k8s/mysql/
   kubectl apply -f k8s/drone/
   ```
 
@@ -63,7 +64,7 @@ kubectl create ns drone
 ### mysql起動後
 + drone databaseを作る
 ```
-kubectl --namespace drone exec -it mysql-84db84fb8d-wt5hk mysql -u root -ppassword -e 'create database if not exists drone;'
+kubectl --namespace drone exec -it mysql-84db84fb8d-wt5hk -- mysql -u root -ppassword -e 'create database if not exists drone;'
 
 ```
 

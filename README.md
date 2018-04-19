@@ -103,13 +103,6 @@ terraform apply terraform
   + mysqlのuser名 / password
   + 設定すべき環境変数がけっこうぐちゃってる
 
-+ teraffomr destroyしてもkubernetesのingの設定消せてない
-  + kubectl delete ingしてるけど, なんか残るな...
-    + ネットワークサービス-負荷分散-ロードバランサ/バックエンド
-    + ComputeEngine-インスタンスグループ
-  + 暫定対応として, 
-    + `kubectl --namespace drone delete ing drone` をして, 消えたのを見てからdestroy...
-
 + kubernetes.tf、他の環境で動かすためには前提がある
   + 少なくともgcloud / kubectlが動かないと.
   + あとdirenvに書いてあるたくさんの環境変数
@@ -122,3 +115,18 @@ terraform apply terraform
 + droneの設定変えてdeployとかした場合, クラスタから作り直すのはおかしい
   + diskも削除して設定全部消えるし.
   + モジュールは一箇所で管理して, terraformコマンド叩くときに切り分けられないかな.
+
+
++ droneへのsecretの登録とレジストリの登録.
+### レジストリ登録
++ 
+```
+drone registry add \
+    --repository karino-t/test-drone \
+    --hostname gcr.io \
+    --username _json_key \
+    --password @proj-gcp-sa.json
+```
+
+
+
