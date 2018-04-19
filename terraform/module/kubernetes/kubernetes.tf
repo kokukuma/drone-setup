@@ -116,6 +116,8 @@ resource "null_resource" "kubernetes_lb" {
 
 // 他の奴らはcluster削除で一緒に消えるからこれだけ
 resource "null_resource" "kubernetes_lb_destory" {
+  depends_on = ["null_resource.kubernetes_lb"]
+
   provisioner "local-exec" {
     when    = "destroy"
     command = "kubectl --namespace ${var.namespace} delete ing drone"

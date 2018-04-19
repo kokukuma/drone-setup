@@ -116,3 +116,9 @@ terraform apply terraform
 
 + kubernetesのprovider, deployementに対応したらそっちで書き直す.
   + destroyしたときの挙動とか
+
++ gkeの権限追加して、追加applyしたら、kubernetesの方は起動せず終わった問題
+
++ droneの設定変えてdeployとかした場合, クラスタから作り直すのはおかしい
+  + diskも削除して設定全部消えるし.
+  + モジュールは一箇所で管理して, terraformコマンド叩くときに切り分けられないかな.
