@@ -35,6 +35,7 @@ export DRONE_HOST="" // terraformで構築するときは内部で設定され�
 // secret経由で渡されるもの
 export DRONE_GITHUB_CLIENT=""       // 作ったやつ
 export DRONE_GITHUB_SECRET=""       // 作ったやつ
+export DRONE_ADMIN=""               // ログインを許可したいユーザ
 export DRONE_SECRET=random-string   // 
 export MYSQL_PASSWORD="password"    // 
 export DRONE_DATABASE_DATASOURCE="root:password@tcp(mysql-service:3306)/drone?parseTime=true"
