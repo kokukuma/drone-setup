@@ -18,12 +18,12 @@ spec:
             - containerPort: 9000
           env:
             - name: DRONE_OPEN
-              value: "true"
-            - name: DRONE_ORGS
+              value: "false"
+            - name: DRONE_ADMIN
               valueFrom:
                 configMapKeyRef:
                   name: drone-config-map
-                  key: DRONE_ORGS
+                  key: DRONE_ADMIN
             - name: DRONE_HOST
               valueFrom:
                 configMapKeyRef:
