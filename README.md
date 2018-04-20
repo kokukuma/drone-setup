@@ -90,44 +90,27 @@ terraform apply terraform
 + [terraform](https://www.terraform.io/docs/providers/google/r/container_cluster.html) 
 
 ## 課題
-+ 割り当てるスペックが雑
-  + nodeのspecを利用するpodからちゃんと考える
-
-+ droneの接続先がIPのまま
-  + これだと, 立ち上げる度にIP変わる
-    + github OAuthのURL設定するものめんどくさいし.
-    + staticにしたものをずっと保持し続けるでもありかな...
-      + terraformで管理外になるけど.
-      + GCSもそうだしいいかな...
-
-+ 認証とかパスワードとかその辺
-  + mysqlのuser名 / password
-  + 設定すべき環境変数がけっこうぐちゃってる
-
-+ kubernetes.tf、他の環境で動かすためには前提がある
-  + 少なくともgcloud / kubectlが動かないと.
-  + あとdirenvに書いてあるたくさんの環境変数
-
-+ kubernetesのprovider, deployementに対応したらそっちで書き直す.
-  + destroyしたときの挙動とか
-
+### 永続化 / 停止は分離する.
 + gkeの権限追加して、追加applyしたら、kubernetesの方は起動せず終わった問題
-
 + droneの設定変えてdeployとかした場合, クラスタから作り直すのはおかしい
   + diskも削除して設定全部消えるし.
   + モジュールは一箇所で管理して, terraformコマンド叩くときに切り分けられないかな.
 
+### 割り当てるスペックが雑
++ nodeのspecを利用するpodからちゃんと考える
 
-+ droneへのsecretの登録とレジストリの登録.
-### レジストリ登録
-+ 
-```
-drone registry add \
-    --repository karino-t/test-drone \
-    --hostname gcr.io \
-    --username _json_key \
-    --password @proj-gcp-sa.json
-```
+### droneの接続先がIPのまま
++ これだと, 立ち上げる度にIP変わる
+  + github OAuthのURL設定するものめんどくさいし.
+  + staticにしたものをずっと保持し続けるでもありかな...
+    + terraformで管理外になるけど.
+    + GCSもそうだしいいかな...
 
+### 認証とかパスワードとかその辺
++ mysqlのuser名 / password
 
-
+### kubernetes.tfが微妙.
++ kubernetesのprovider, deployementに対応したらそっちで書き直す.
++ kubernetes.tf、他の環境で動かすためには前提がある
+  + 少なくともgcloud / kubectlが動かないと.
+  + あとdirenvに書いてあるたくさんの環境変数
