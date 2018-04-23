@@ -5,24 +5,12 @@ brew tap drone/drone
 brew install drone
 ```
 
+## ローカル
 ### install gcloud
 + [Cloud SDK のインストール](https://cloud.google.com/sdk/downloads?hl=ja)
 
 ### install terraform
 + [getting-started/install](https://www.terraform.io/intro/getting-started/install.html)
-
-### gihtubのtoken取得
-+ [Register a new OAuth application](https://github.com/settings/applications/new)
-+ Client IDと Client Secretを作っておく.
-+ Homepage URLとAuthorization callback URLは後から作成された物を追加する
-
-### サービスアカウントの作成
-+ [サービスアカウントの作成 ](docs/gcloud-iam.md)
-+ json keyを取得する
-+ これもterraformにしておきたい..
-
-### terraformのbucket作成
-+ GCSに作成しておく.
 
 ### 環境変数
 + direnvに書いておく.
@@ -52,3 +40,42 @@ export TF_VAR_region=''
 export TF_VAR_zone=''
 export TF_VAR_credentials_file=''
 ```
+
+## Github
+### gihtubのtoken取得
++ [Register a new OAuth application](https://github.com/settings/applications/new)
++ Client IDと Client Secretを作っておく.
++ Homepage URLとAuthorization callback URLは後から作成された物を追加する
+
+## GCP
+### terraformを操作する用のサービスアカウントの作成
++ [サービスアカウントの作成 ](docs/gcloud-iam.md)
+  + json keyを取得する
+  + これもterraformにしておきたい..
++ role
+  + roles/owner
+
+### Drone用のサービスアカウントの作成
++ [サービスアカウントの作成 ](docs/gcloud-iam.md)
+  + json keyを取得する
+  + これもterraformにしておきたい..
++ role
+  + roles/cloudsql.editor
+  + roles/cloudsql.client
+  + roles/cloudbuild.builds.editor
+
+### terraformのbucket作成
++ GCSに作成しておく.
+```
+```
+
+### terraformの
++ CloudSQLのinstanceを作成しておく.
+```
+gcloud sql instances create drone-db --region=asia-east1
+```
+
+
+
+
+

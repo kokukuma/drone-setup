@@ -6,7 +6,8 @@ resource "null_resource" "kubernetes_config" {
     command = "envsubst < ${var.k8spath}/config/configmap.yaml | kubectl --namespace ${var.namespace} apply -f -"
 
     environment {
-      DRONE_HOST = "http://${var.static_ip}"
+      DRONE_HOST         = "http://${var.static_ip}"
+      DRONE_DB_CONN_NAME = "${var.sql_connection_name}"
     }
   }
 

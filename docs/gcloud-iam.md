@@ -14,7 +14,7 @@
 + ※
   + 一つ一つ付けるのはめんどくさすぎるので, 一旦, roles/owner.
 
-### 作る
+### terraform用のサービスアカウントを作る
 + IAMのサービスアカウントを作成する
 ```
 gcloud iam service-accounts create terraform-account \
@@ -29,13 +29,40 @@ export PROJECT=$(gcloud info --format='value(config.project)')
 
 + 作ったサービスアカウントに権限を付与
 ```
-gcloud projects add-iam-policy-binding \
-    $PROJECT \
+gcloud projects add-iam-policy-binding $PROJECT \
     --role roles/owner \
     --member serviceAccount:$SA_EMAIL
 ```
 
 + サービスアカウントのKeyをダウンロード
+```
+gcloud iam service-accounts keys create drone-sa.json --iam-account $SA_EMAIL
+```
+
+### Drone用のサービスアカウントを作る
++ IAMのサービスアカウントを作成する
+```
+gcloud iam service-accounts create  drone-account \
+    --display-name drone-account
+```
+
++ 作ったサービスアカウントのemailを環境変数に入れておく
+```
+export SA_EMAIL=$(gcloud iam service-accounts list --filter="displayName:drone-account" --format='value(email)')
+export PROJECT=$(gcloud info --format='value(config.project)')
+```
+
++ 作ったサービスアカウントに権限を付与
+```
+gcloud projects add-iam-policy-binding $PROJECT \
+    --role roles/cloudsql.editor \
+    --role roles/cloudsql.client \
+    --role roles/storage.admin \
+    --member serviceAccount:$SA_EMAIL
+```
+
++ サービス アカウント キーをダウンロード
+  + 最終的には, Kubernetes Engineにアップロードする
 ```
 gcloud iam service-accounts keys create drone-sa.json --iam-account $SA_EMAIL
 ```

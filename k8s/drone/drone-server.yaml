@@ -65,6 +65,24 @@ spec:
           volumeMounts:
             - mountPath: /var/lib/drone
               name: drone-home
+
+        # https://github.com/GoogleCloudPlatform/kubernetes-engine-samples/blob/master/cloudsql/mysql_wordpress_deployment.yaml#L39
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.11
+          env:
+            - name: DRONE_DB_CONN_NAME
+              valueFrom:
+                configMapKeyRef:
+                  name: drone-config-map
+                  key: DRONE_DB_CONN_NAME
+          command: ["/cloud_sql_proxy", "--dir=/cloudsql",
+                    "-instances=prj-gcp:asia-east1:drone-db=tcp:3306",
+                    "-credential_file=/secrets/cloudsql/CLOUDSQL_CREDENTIALS"]
+          volumeMounts:
+            - name: cloudsql-instance-credentials
+              mountPath: /secrets/cloudsql
+              readOnly: true
+
       # volumes:
       #   - name: drone-home
       #     hostPath:
@@ -83,3 +101,7 @@ spec:
         - name: drone-home
           persistentVolumeClaim:
             claimName: drone-volume-claim
+
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: drone-secrets

@@ -13,3 +13,11 @@ variable "k8spath" {
 variable "static_ip" {
   description = "static ip address"
 }
+
+variable "proxy_user_name" {
+  description = "goole cloud sql proxy user"
+}
+
+variable "sql_connection_name" {
+  description = "goole cloud sql connection name"
+}
