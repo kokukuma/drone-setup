@@ -20,11 +20,6 @@ resource "google_sql_user" "users" {
   host     = "cloudsqlproxy~%"
 }
 
-output "proxy_user_name" {
-  value = "${google_sql_user.users.name}"
-}
-
 output "sql_connection_name" {
-  // value = "${google_sql_database.drone-db.self_link}"
-  value = "prj-gcp:asia-east1:drone-db"
+  value = "${var.project}:${var.region}:${var.cloud_sql_name}"
 }

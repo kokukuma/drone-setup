@@ -17,28 +17,30 @@ brew install drone
 ```
 // configmapに設定されるもの
 export DRONE_GITHUB_URL="https://github.com" // gitubのurl
-export DRONE_HOST="" // terraformで構築するときは内部で設定される
 
 // secret経由で渡されるもの
 export DRONE_GITHUB_CLIENT=""       // 作ったやつ
 export DRONE_GITHUB_SECRET=""       // 作ったやつ
 export DRONE_ADMIN=""               // ログインを許可したいユーザ
-export DRONE_SECRET=random-string   // 
-export MYSQL_PASSWORD="password"    // 
-export DRONE_DATABASE_DATASOURCE="root:password@tcp(mysql-service:3306)/drone?parseTime=true"
+export DRONE_SECRET=random-string   //
+export DRONE_DATABASE_DATASOURCE="proxyuser@tcp(127.0.0.1:3306)/drone?parseTime=true"
 
 // secretに設定されるもの
 export DRONE_GITHUB_CLIENT_BASE64=$(echo -n ${DRONE_GITHUB_CLIENT} | base64 )
 export DRONE_GITHUB_SECRET_BASE64=$(echo -n ${DRONE_GITHUB_SECRET} | base64 )
 export DRONE_SECRET_BASE64=$(echo -n ${DRONE_SECRET} | base64 )
-export MYSQL_PASSWORD_BASE64=$(echo -n ${MYSQL_PASSWORD} | base64 )
 export DRONE_DATABASE_DATASOURCE_BASE64=$(echo -n ${DRONE_DATABASE_DATASOURCE} | base64 )
+export CLOUDSQL_CREDENTIALS_BASE64=$(cat drone-sa.json | base64)
 
 // terraform実行時に読まれる物
 export TF_VAR_project=''
 export TF_VAR_region=''
 export TF_VAR_zone=''
 export TF_VAR_credentials_file=''
+
+// terraform内で設定されるので, ローカルでしか意味がないもの
+// export DRONE_HOST=""
+// export DRONE_DB_CONN_NAME=""
 ```
 
 ## Github

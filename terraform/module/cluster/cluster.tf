@@ -1,6 +1,7 @@
 # gcp_instance.tf
 
 resource "google_container_cluster" "primary" {
+  // region/zoneを指定しなかったら,  providerと同じになる
   name               = "${var.cluster_name}"
   zone               = "${var.zone}"
   initial_node_count = 3

@@ -62,7 +62,7 @@
         --repository karino-t/test-drone \
         --hostname gcr.io \
         --username _json_key \
-        --password @proj-gcp-sa.json
+        --password @drone-sa.json
     ```
 
 ## CIを実行
