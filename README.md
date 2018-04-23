@@ -45,7 +45,7 @@
       --repository karino-t/test-drone \
       --image plugins/gcr \
       --name google_credentials \
-      --value $GOOGLE_CREDENTIALS # GOOGLE_CREDENTIALS=$(cat proj-gcp-sa.json | base64)
+      --value $GOOGLE_CREDENTIALS # GOOGLE_CREDENTIALS=$(cat drone-sa.json | base64)
     ```
   + 例えば, slackのwebhookurlとか
     ```
@@ -86,9 +86,6 @@
 + [terraform](https://www.terraform.io/docs/providers/google/r/container_cluster.html)
 
 ## 課題
-### cluster落とすとデータ消える状態
-+ mysqlはkubernetesに乗せるものじゃないな. たぶん.
-
 ### 割り当てるスペックが雑
 + nodeのspecを利用するpodからちゃんと考える
 
@@ -98,9 +95,7 @@
   + staticにしたものをずっと保持し続けるでもありかな...
     + terraformで管理外になるけど.
     + GCSもそうだしいいかな...
-
-### 認証とかパスワードとかその辺
-+ mysqlのuser名 / password
++ あと, httpsにする.
 
 ### kubernetes.tfが微妙.
 + kubernetesのprovider, deployementに対応したらそっちで書き直す.

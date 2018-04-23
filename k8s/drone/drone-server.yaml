@@ -30,14 +30,11 @@ spec:
         # CloudSQL
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:1.11
-          env:
-            - name: DRONE_DB_CONN_NAME
-              valueFrom:
-                configMapKeyRef:
-                  name: drone-config-map
-                  key: DRONE_DB_CONN_NAME
+          envFrom:
+            - configMapRef:
+                name: drone-config-map
           command: ["/cloud_sql_proxy", "--dir=/cloudsql",
-                    "-instances=prj-gcp:asia-east1:drone-db=tcp:3306",
+                    "-instances=$(DRONE_DB_CONN_NAME)=tcp:3306",
                     "-credential_file=/secrets/cloudsql/CLOUDSQL_CREDENTIALS"]
           volumeMounts:
             - name: cloudsql-instance-credentials
